@@ -5,19 +5,20 @@ import { Pagination } from './components/Pagination';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-
 export const App: React.FC = () => {
   const items = getNumbers(1, 42).map(n => `Item ${n}`);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [perPage, setPerPage] = useState<number>(5);
-  const visibleItems = getNumbers(1, perPage);
+  const first = currentPage * perPage - perPage + 1;
+  const last = Math.min(items.length, currentPage * perPage);
+  const visibleItems = getNumbers(first, last);
 
   return (
     <div className="container">
       <h1>Items with Pagination</h1>
 
       <p className="lead" data-cy="info">
-        Page {currentPage} (items 1 - 5 of 42)
+        Page {currentPage} {`(items ${first} - ${last} of 42)`}
       </p>
 
       <div className="form-group row">
@@ -26,9 +27,10 @@ export const App: React.FC = () => {
             data-cy="perPageSelector"
             id="perPageSelector"
             className="form-control"
-            onSelect={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              setPerPage(+e.target.value)
-            }
+            value={perPage}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              setPerPage(+e.target.value);
+            }}
           >
             <option value="3">3</option>
             <option value="5">5</option>
@@ -42,18 +44,18 @@ export const App: React.FC = () => {
         </label>
       </div>
 
-        <Pagination
-          total={42} // total number of items to paginate
-          perPage={perPage} // number of items per page
-          currentPage={currentPage} /* optional with 1 by default */
-          onPageChange={page => setCurrentPage(page)}
-        />
+      <Pagination
+        total={42} // total number of items to paginate
+        perPage={perPage} // number of items per page
+        currentPage={currentPage} /* optional with 1 by default */
+        onPageChange={page => setCurrentPage(page)}
+      />
 
-        <ul>
-          {visibleItems.map(number => (
-            <li data-cy="item">{`Item ${number}`}</li>
-          ))}
-        </ul>
+      <ul>
+        {visibleItems.map(number => (
+          <li data-cy="item" key={number}>{`Item ${number}`}</li>
+        ))}
+      </ul>
     </div>
   );
 };
