@@ -30,6 +30,7 @@ export const App: React.FC = () => {
             value={perPage}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
               setPerPage(+e.target.value);
+              setCurrentPage(1);
             }}
           >
             <option value="3">3</option>
